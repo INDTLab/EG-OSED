@@ -1,4 +1,4 @@
-[![HOME](imgs/EG-OSED-YOLOv4.JPG)]()
+<p align="center"> <a href="" ><img src="imgs/abstract.png"></a></p>
 <p align="center"> 
 <a href="" ><img src="https://img.shields.io/badge/HOME-KBS-blue.svg"></a>
 <a href="" ><img src="https://img.shields.io/badge/HOME-Paper-important.svg"></a>
