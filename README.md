@@ -20,7 +20,13 @@
 2. Activate the new environment:  
    `conda activate py37`  
 3. Verify that the new environment was installed correctly:  
-    `conda env list`  
+    `conda env list`
+
+## Configuration
+You can use command like this:  
+`python train.py -g gpu_num -subdivision sub_num`  
+You can also change parameters in the train.py and then :  
+`python train.py`  
   
 # Data Sets
 You can download the data sets uesd in the paper from : https://pan.baidu.com/s/1WjPvBdWgK2zxbK0Z6USqJw?pwd=h04t 提取码：h04t.  
