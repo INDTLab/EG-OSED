@@ -32,7 +32,6 @@ from easydict import EasyDict as edict
 from dataset import Yolo_dataset
 from cfg import Cfg
 from models import Yolov4
-from tool.darknet2pytorch import Darknet
 
 from tool.tv_reference.utils import collate_fn as val_collate
 from val_train import val
@@ -586,10 +585,7 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logging.info(f'Using device {device}')
 
-    if cfg.use_darknet_cfg:
-        model = Darknet(cfg.cfgfile)
-    else:
-        model = Yolov4(cfg.pretrained,backbone=cfg.backbone, n_classes=cfg.classes)
+    model = Yolov4(cfg.pretrained,backbone=cfg.backbone, n_classes=cfg.classes)
 
     
     if torch.cuda.device_count() > 1:
