@@ -13,6 +13,15 @@
 
 ![archioverall](imgs/EG-OSED-YOLOv4.JPG)
 
+# Usage
+## Installation
+1. Create the environment from the environment.yml file:
+   `conda env create -f environment.yml`
+3. Activate the new environment:
+   `conda activate py37`
+5. Verify that the new environment was installed correctly:
+    `conda env list`
+  
 # Data Sets
 You can download the data sets uesd in the paper from : https://pan.baidu.com/s/1WjPvBdWgK2zxbK0Z6USqJw?pwd=h04t 提取码：h04t.  
 
