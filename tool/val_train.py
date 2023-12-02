@@ -118,7 +118,7 @@ def val(model, device, config , epoch):
                     new_f.write("%s %s %s %s %s\n" % (obj_name, left, top, right, bottom))
     print("Get ground truth result done.")
     
-    screen_dir = os.path.join(config.name,config.weight.split('.')[0]+'.txt')
+    screen_dir = os.path.join(config.name,'result.txt')
     screen_file=open(screen_dir,mode="a",encoding="utf-8")
     print("epoch : "+str(epoch+1),file=screen_file)
     print(f"fps : {fps:.1f} img / s",file=screen_file)
