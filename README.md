@@ -34,5 +34,7 @@ You can download the data sets uesd in the paper from : https://pan.baidu.com/s/
 Then you can get labels file with the formate used in this repo by voc.py as:  
 `python voc.py`  
 
+# Result
+![result](imgs/results.jpg)
 
 # Citation
