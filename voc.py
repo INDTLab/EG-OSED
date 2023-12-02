@@ -3,30 +3,25 @@ import sys
 import xml.etree.ElementTree as ET
 import os
 from tqdm import tqdm
+import shutil
 
 
 PROJECT_PATH=os.path.dirname(os.path.abspath(__file__))
 
 def parse_voc_annotation(
-    data_path, file_type, anno_path,use_difficult_bbox=False
+    dataset,data_path, file_type, anno_path,use_difficult_bbox=False
 ):
 
-    
-    '''
     #fosd_classes:
-    classes = ["Bay","Beach_Hut","Beach_Umbrella","Buoy","Cargo_Port","Coastal_Camping","Coastal_Nuclear_Power_Plant","Coastal_Road","Coastal_Windmill","Diving","Fleet","Headland","Island","Lighthouse","Offshore_Oil_Rig","Pier","Sailing","Sea_Arch","Sea_Bird","Sea_Bridge","Sea_Cave","Sea_Cliff","Sea_Farm","Sea_Iceberg","Sea_Mammal_Animal","Sea_Stack","Sea_Wall","Sea_Wave","Skerry","Star_Fish","Underwater_Fish","Underwater_Jellyfish","Underwater_Shark","Underwater_Turtle"]
-    '''
-  
+    if dataset == 'FOSD_OD':
+        classes = ["Bay","Beach_Hut","Beach_Umbrella","Buoy","Cargo_Port","Coastal_Camping","Coastal_Nuclear_Power_Plant","Coastal_Road","Coastal_Windmill","Diving","Fleet","Headland","Island","Lighthouse","Offshore_Oil_Rig","Pier","Sailing","Sea_Arch","Sea_Bird","Sea_Bridge","Sea_Cave","Sea_Cliff","Sea_Farm","Sea_Iceberg","Sea_Mammal_Animal","Sea_Stack","Sea_Wall","Sea_Wave","Skerry","Star_Fish","Underwater_Fish","Underwater_Jellyfish","Underwater_Shark","Underwater_Turtle"]
     #places_classes
-    classes=['aircraft_carrier', 'beach_hut', 'buoy', 'canoe', 'container_ship', 'crab', 'cruise', 'cruiser', 'diver', 'fish', 'fishing_boat', 'hippocampu', 'jellyfish', 'landing_ship', 'life_buoy', 'lighthouse', 'motorboat', 'ocean_rubbish', 'offshore_oilrig', 'oil_tanker', 'penguin', 'pier', 'rubber_boats', 'sailboat', 'sandcastle', 'seaplane', 'sea_bird', 'sea_bridge', 'sea_fork', 'sea_mammal', 'sea_turtle', 'shark', 'shrimp', 'sign', 'starfish', 'submarine', 'surfboard', 'tugboat', 'umbrella', 'yacht']
-    
-    
-    '''
-    #sun_classes
-    classes = ["boathouse","bridge","iceberg","lighthouse","oilrig","sandbar"]
-    '''
-
-    ##########################################
+    elif dataset  == 'Places365_OD':
+        classes=['aircraft_carrier', 'beach_hut', 'buoy', 'canoe', 'container_ship', 'crab', 'cruise', 'cruiser', 'diver', 'fish', 'fishing_boat', 'hippocampu', 'jellyfish', 'landing_ship', 'life_buoy', 'lighthouse', 'motorboat', 'ocean_rubbish', 'offshore_oilrig', 'oil_tanker', 'penguin', 'pier', 'rubber_boats', 'sailboat', 'sandcastle', 'seaplane', 'sea_bird', 'sea_bridge', 'sea_fork', 'sea_mammal', 'sea_turtle', 'shark', 'shrimp', 'sign', 'starfish', 'submarine', 'surfboard', 'tugboat', 'umbrella', 'yacht']
+     #sun_classes
+    elif dataset  == 'SUN_OD':
+        classes = ["boathouse","bridge","iceberg","lighthouse","oilrig","sandbar"]
+ 
     img_inds_file = os.path.join(
         data_path, "ImageSets", file_type + ".txt"
     )
@@ -34,10 +29,9 @@ def parse_voc_annotation(
         lines = f.readlines()
         image_ids = [line.strip() for line in lines]
 
-    with open(anno_path, "a") as f:
+    with open(os.path.join(anno_path,file_type + ".txt"), "a") as f:
         for image_id in tqdm(image_ids):
             new_str = ''
-            ########################################
             image_path = os.path.join(
                 data_path, "JPEGImages", image_id + ".jpg"
             )
@@ -78,39 +72,43 @@ def parse_voc_annotation(
 
 if __name__ == "__main__":
 
-    #######################################
-    #dataset dir
-    train_data_path = os.path.join(
-        PROJECT_PATH, "places365_OD"
-    )
-    test_data_path = os.path.join(
-        PROJECT_PATH, "places365_OD"
-    )
-
- 
-    train_annotation_path = os.path.join(PROJECT_PATH,"data/places365_OD", "train.txt")
-    if os.path.exists(train_annotation_path):
-        os.remove(train_annotation_path)   
-    test_annotation_path = os.path.join(PROJECT_PATH,"data/places365_OD", "test.txt")
-    if os.path.exists(test_annotation_path):
-        os.remove(test_annotation_path)
-
-    len_train = parse_voc_annotation(
-        train_data_path,
-        "train",
-        train_annotation_path,
-        use_difficult_bbox=False,
-    )
-
-    len_test = parse_voc_annotation(
-        test_data_path,
-        "test",
-        test_annotation_path,
-        use_difficult_bbox=False,
-    )
-
-    print(
-        "The number of images for train and test are :train : {0} |  test : {1}".format(
-            len_train, len_test
+    for dataset in ["FOSD_OD","Places365_OD","SUN_OD"]:
+        train_data_path = os.path.join(
+            PROJECT_PATH, 'dataset',dataset
         )
-     )
+        test_data_path = os.path.join(
+            PROJECT_PATH, 'dataset',dataset
+        )
+
+     
+        train_annotation_path = os.path.join(PROJECT_PATH,"data",dataset)
+        if os.path.exists(train_annotation_path):
+            shutil.rmtree(train_annotation_path)
+        os.makedirs(train_annotation_path)
+        test_annotation_path = os.path.join(PROJECT_PATH,"data",dataset)
+        if os.path.exists(test_annotation_path):
+            shutil.rmtree(test_annotation_path)
+        os.makedirs(test_annotation_path)
+
+        len_train = parse_voc_annotation(
+            dataset,
+            train_data_path,
+            "train",
+            train_annotation_path,
+            use_difficult_bbox=False,
+        )
+
+        len_test = parse_voc_annotation(
+            dataset,
+            test_data_path,
+            "test",
+            test_annotation_path,
+            use_difficult_bbox=False,
+        )
+
+        print(
+            "The number of images of {0}for train and test are :train : {1} |  test : {2}".format(
+                dataset,len_train, len_test
+            )
+         )
+

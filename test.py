@@ -20,7 +20,6 @@ from torchvision.utils import make_grid, save_image
 from tool.utils import *
 from tool.torch_utils import *
 from models.models import Yolov4
-from tool.darknet2pytorch import Darknet
 from tool.get_xmatrix import get_matrix
 from tool.utils_map import get_map,get_coco_map
 
@@ -38,8 +37,8 @@ def test(model, device, config):
     if not os.path.exists(savedir):
         os.makedirs(savedir)
 
-    images_dir = os.path.join(config.dataset,'JPEGImages')
-    test_path = os.path.join(config.dataset,'ImageSets','test.txt')
+    images_dir = os.path.join('dataset',config.dataset,'JPEGImages')
+    test_path = os.path.join('dataset',config.dataset,'ImageSets','test.txt')
     image_ids=open(test_path).read().strip().split()
     #print(image_ids)
     
@@ -54,7 +53,7 @@ def test(model, device, config):
         os.makedirs(os.path.join(map_out_path, 'detection-results'))
         
     num_classes = config.classes
-    namesfile = os.path.join('data',dataset+'.names')  # custom class file--data/FOSD_OD.names
+    namesfile = os.path.join('data',config.dataset+'.names')  # custom class file--data/FOSD_OD.names
     class_names = load_class_names(namesfile)
     
     print("Get predict result.")
@@ -107,7 +106,7 @@ def test(model, device, config):
     print("Get ground truth result.")
     for image_id in tqdm(image_ids):
         with open(os.path.join(map_out_path, "ground-truth/"+image_id+".txt"), "w") as new_f:
-            root = ET.parse(os.path.join( config.dataset,"Annotations",image_id+".xml")).getroot()
+            root = ET.parse(os.path.join('dataset',config.dataset,"Annotations",image_id+".xml")).getroot()
             for obj in root.findall('object'):
                 difficult_flag = False
                 if obj.find('difficult')!=None:
@@ -130,7 +129,7 @@ def test(model, device, config):
     print("Get ground truth result done.")
 
     
-    screen_path = os.path.join(name,config.weight.split('.')[0]+'.txt')
+    screen_path = os.path.join(config.name,'result.txt')
     screen_file=open(screen_path,mode="w",encoding="utf-8")
     print(f"fps : {fps:.1f} img / s",file=screen_file)
     print("Get map.",file=screen_file)
@@ -138,15 +137,14 @@ def test(model, device, config):
     get_map(MINOVERLAP, draw_plot, screen_path, path = map_out_path)
     screen_file=open(screen_path,mode="a",encoding="utf-8")
     print("Get map done.",file=screen_file)
-    
+    '''
     print("Get coco map.",file=screen_file)
     screen_file.close()
     get_coco_map(class_names, map_out_path, screen_path)
     screen_file=open(screen_path,mode="a",encoding="utf-8")
     print("Get coco map done." ,file=screen_file)
     screen_file.close()
-    get_matrix(MINOVERLAP, path = map_out_path,save_path=os.path.join(name), dataset=dataset)
-
+    '''
 
 def get_map_txt(img,boxes,map_out_path,class_names,image_id):
     img = np.copy(img)
@@ -171,11 +169,11 @@ def get_args():
     
     parser = argparse.ArgumentParser(description='Test your image or video by trained model.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-name',  type=str, default='',help='save name', dest='name')
+    parser.add_argument('-name',  type=str, default='fosd-egm-param',help='save name', dest='name')
     parser.add_argument('-g', '--gpu', metavar='G', type=str, default='-1', help='GPU', dest='gpu')
     parser.add_argument('-dataset', type=str, default='FOSD_OD', help='dataset', dest='dataset')
-    parser.add_argument('-w','--weight', type=str, default='', help='Yolov4_epoch300.pth')
-    parser.add_argument('-backbone',type=str, default='', help='backbone')
+    parser.add_argument('-w','--weight', type=str, default='/data2/xkk/yolo4/checkpoint/fosd/newstep/dual/fosd_pres50_dual_eam_eachscpcuplarge_param_loss11_nesterov/Yolov4_epoch300.pth', help='Yolov4_epoch300.pth')
+    parser.add_argument('-backbone',type=str, default='resnet50', help='backbone')
     parser.add_argument('--width', type=int, default='608',help='image width')
     parser.add_argument('--height', type=int, default='608',help='image height')
     args =parser.parse_args()

@@ -34,7 +34,7 @@ from cfg import Cfg
 from models.models import Yolov4
 
 from tool.tv_reference.utils import collate_fn as val_collate
-from tool..val_train import val
+from tool.val_train import val
 
 
 def bboxes_iou(bboxes_a, bboxes_b, xyxy=True, GIoU=False, DIoU=False, CIoU=False):
@@ -457,7 +457,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                     except:                         
                         logging.info(f'failed to remove {model_to_remove}')
             
-            if (epoch+1)>=150 and (epoch+1)%50 == 0 or (epoch+1)>=250 and (epoch+1)%10 == 0:# or epoch==0:    
+            if (epoch+1)>=150 and (epoch+1)%50 == 0 or (epoch+1)>=250 and (epoch+1)%10 == 0 or epoch==0:    
                 
                 eval_model = Yolov4(config.pretrained,backbone=config.backbone, n_classes=config.classes, inference=True)
             
@@ -483,12 +483,11 @@ def get_args(**kwargs):
     parser = argparse.ArgumentParser(description='Train the Model on images and target masks',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-sub', '--subdivisions', type=int, default=8,help='subdivisions', dest='subdivisions')
-    parser.add_argument('-name',  type=str, default='',help='project name ', dest='name')
+    parser.add_argument('-name',  type=str, default='fosd-egm-param',help='project name ', dest='name')
     parser.add_argument('-dataset',  type=str, default='FOSD_OD',help='dataset', dest='dataset')
     parser.add_argument('-g', '--gpu', metavar='G', type=str, default='-1',help='GPU', dest='gpu')
-    parser.add_argument('-backbone', type=str, default='resnet50', help='darknet\xception\resnet')
+    parser.add_argument('-backbone', type=str, default='resnet50', help='darknet\darknet-neck\resnet18-imagenet\resnet50')
     parser.add_argument('-pretrained', type=str, default='weights/resnet50_places365.pt',help='pretrained yolov4.conv.137')
-    parser.add_argument('-classes', type=int, default=34, help='dataset classes')
     parser.add_argument(
         '-iou-type', type=str, default='ciou',
         help='iou type (iou, giou, diou, ciou)',
@@ -551,15 +550,18 @@ if __name__ == "__main__":
     cfg = get_args(**Cfg)
     if cfg.dataset == 'FOSD_OD':
         cfg.steps=[8805,9906]
+        cfg.classes = 34
     elif cfg.dataset == 'Places365_OD':
         cfg.steps=[14550,16369]
+        cfg.classes = 40
     elif cfg.dataset == 'SUN_OD':
         cfg.steps=[2895,3257]
+        cfg.classes = 6
 
-    cfg.dataset_dir = os.path.join(cfg.dataset,'JPEGImages')
-    cfg.edge_dir = os.path.join(cfg.dataset,'EdgeMap-canny')
+    cfg.dataset_dir = os.path.join('dataset',cfg.dataset,'JPEGImages')
+    cfg.edge_dir = os.path.join('dataset',cfg.dataset,'EdgeMap-canny')
     cfg.train_label = os.path.join('data',cfg.dataset,'train.txt')   
-    cfg.val_path = os.path.join(cfg.dataset,'ImageSets/test.txt')
+    cfg.val_path = os.path.join('dataset',cfg.dataset,'ImageSets/test.txt')
     cfg.checkpoints = os.path.join(cfg.name,'checkpoints')
     
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.gpu
