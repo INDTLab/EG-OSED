@@ -201,6 +201,8 @@ if __name__ == "__main__":
     elif cfg.dataset == 'SUN_OD':
         cfg.classes = 6
 
+    cfg.name = os.path.join('runs/train',cfg.name)
+
     MINOVERLAP      = 0.5    #map iou
     
     model = Yolov4(yolov4conv137weight=None, backbone= cfg.backbone, n_classes=cfg.classes, inference=True)

@@ -558,6 +558,7 @@ if __name__ == "__main__":
         cfg.steps=[2895,3257]
         cfg.classes = 6
 
+    cfg.name = os.path.join('runs/train',cfg.name)
     cfg.dataset_dir = os.path.join('dataset',cfg.dataset,'JPEGImages')
     cfg.edge_dir = os.path.join('dataset',cfg.dataset,'EdgeMap-canny')
     cfg.train_label = os.path.join('data',cfg.dataset,'train.txt')   
