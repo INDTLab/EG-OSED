@@ -1,1 +1,1 @@
-Download weights:<a href="https://pan.baidu.com/s/1pbDzIRHppJlVzXoqspNB4w?pwd=keze">BaiduLink</a> or <a href="">GoogleLink</a> with code `keze`
+Download weights:<a href="https://pan.baidu.com/s/1pbDzIRHppJlVzXoqspNB4w?pwd=keze">BaiduLink</a> with code `keze` or <a href="https://drive.google.com/file/d/1YCEIvquBG44w44tzoDAxpvnQpgddF1CV/view?usp=drive_link">GoogleLink</a>
