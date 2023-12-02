@@ -1,4 +1,4 @@
-<p align="center"> <a href="" ><img src="imgs/title.png"></a></p>
+<p align="center"> <a href="" ><img src="imgs/title.JPG"></a></p>
 <p align="center"> 
 <a href="" ><img src="https://img.shields.io/badge/HOME-KBS-blue.svg"></a>
 <a href="" ><img src="https://img.shields.io/badge/HOME-Paper-important.svg"></a>
