@@ -16,7 +16,7 @@
 # Usage
 ## Installation
 1. Create the environment from the environment.yml file:  
-   `conda env create -f environment.yml`  
+   ```conda env create -f environment.yml```    
 2. Activate the new environment:  
    `conda activate py37`  
 3. Verify that the new environment was installed correctly:  
