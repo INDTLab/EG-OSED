@@ -15,24 +15,36 @@
 
 # Usage
 ## Installation
-1. Create the environment from the environment.yml file:  
-   ```conda env create -f environment.yml```    
+1. Create the environment from the `environment.yml` file:   
+   ```copy
+   conda env create -f environment.yml
+   ```     
 2. Activate the new environment:  
-   `conda activate py37`  
+   ```copy
+   conda activate py37
+   ```    
 3. Verify that the new environment was installed correctly:  
-    `conda env list`
+    ```copy
+   conda env list
+    ```    
 
 ## Configuration
 You can use command like this:  
-`python train.py -g gpu_num -subdivision sub_num -name 'proj-name -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight' `  
+```copy
+python train.py -g gpu_num -subdivision sub_num -name 'proj-name -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
+```  
 You can also change parameters in the train.py and then :  
-`python train.py`  
+```copy
+python train.py
+```  
   
 # Data Sets
 You can download the data sets uesd in the paper from : https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a 提取码：bl3a    
 
 Then you can get labels file with the formate used in this repo by voc.py as:  
-`python voc.py`  
+```copy
+python voc.py
+```  
 
 # Result
 ![result](imgs/results.JPG)
