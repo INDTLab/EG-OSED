@@ -605,11 +605,11 @@ class Yolov4(nn.Module):
 
         
         if 'resnet50' in self.backbone:
-            self.egm = EGM_each_ms_scaleadd_uplarge()
+            self.eam = EGM_each_ms_scaleadd_uplarge()
         elif 'resnet18' in self.backbone:
-            self.egm = EGM_each_ms_scaleadd_uplarge(backbone='resnet18')
+            self.eam = EGM_each_ms_scaleadd_uplarge(backbone='resnet18')
         elif 'darknet' in self.backbone:
-            self.egm = EGM_each_ms_scaleadd_uplarge_darknet()
+            self.eam = EGM_each_ms_scaleadd_uplarge_darknet()
 
         
         # neck
@@ -670,7 +670,7 @@ class Yolov4(nn.Module):
         else:
             d1,d2,d3,d4,d5=self.down(input)
             
-        edge = self.egm(d5,d4,d3,d2,d1)
+        edge = self.eam(d5,d4,d3,d2,d1)
         edge_att = torch.sigmoid(edge)
         
         x20, x13, x6 = self.neck(d5, d4, d3)
