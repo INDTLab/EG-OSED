@@ -29,17 +29,24 @@
     ```    
 
 ## Configuration
+### Train
 You can use command like this:  
 ```copy
-python train.py -g gpu_num -subdivision sub_num -name 'proj-name -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
+python train.py -g gpu_num -subdivision sub_num -name 'proj-name' -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
 ```  
 You can also change parameters in the train.py and then :  
 ```copy
 python train.py
-```  
+```
+
+### Test
+Evaluates the model on the test data set.
+```copy
+python test.py -g gpu_num -name 'proj-name' -dataset 'dataset-name' -w 'weights' -backbone 'backbone-name'
+```
   
 # Data Sets
-You can download the data sets uesd in the paper from : https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a 提取码：bl3a    
+Download data sets : https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a 提取码：bl3a    
 
 Then you can get labels file with the formate used in this repo by voc.py as:  
 ```copy
