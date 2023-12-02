@@ -29,14 +29,11 @@ def val(model, device, config , epoch):
     use_cuda = 1
     #是否绘制中间结果的ap图
     draw_plot = False
-    dataset=config.dataset
-    #   结果输出的文件夹，默认为map_out
-    ###################################################
     if epoch+1==config.TRAIN_EPOCHS:        
         draw_plot = True
     map_out_path    = os.path.join(config.name,'map_out')
-    images_dir = os.path.join(config.dataset,'JPEGImages')
-    val_path = os.path.join(config.dataset,'ImageSets','test.txt')
+    images_dir = os.path.join('dataset',config.dataset,'JPEGImages')
+    val_path = os.path.join('dataset',config.dataset,'ImageSets','test.txt')
 
     
     image_ids=open(val_path).read().strip().split()
@@ -52,7 +49,7 @@ def val(model, device, config , epoch):
         os.makedirs(os.path.join(map_out_path, 'detection-results'))
     ###########################################################3
     num_classes = config.classes
-    namesfile = os.path.join('data',dataset+'.names')#'data/custom.names'
+    namesfile = os.path.join('data',config.dataset+'.names')#'data/custom.names'
     class_names = load_class_names(namesfile)
     
     print("Get predict result.")
@@ -96,7 +93,7 @@ def val(model, device, config , epoch):
     print("Get predict result done.")
     ###################################################################
     print("Get ground truth result.")
-    Annotation_path=os.path.join(config.dataset,'Annotations')
+    Annotation_path=os.path.join('dataset',config.dataset,'Annotations')
     for image_id in image_ids:
         with open(os.path.join(map_out_path, "ground-truth/"+image_id+".txt"), "w") as new_f:
             root = ET.parse(os.path.join( Annotation_path,image_id+".xml")).getroot()
@@ -121,7 +118,7 @@ def val(model, device, config , epoch):
                     new_f.write("%s %s %s %s %s\n" % (obj_name, left, top, right, bottom))
     print("Get ground truth result done.")
     
-    screen_dir = os.path.join(name,config.weight.split('.')[0]+'.txt')
+    screen_dir = os.path.join(config.name,config.weight.split('.')[0]+'.txt')
     screen_file=open(screen_dir,mode="a",encoding="utf-8")
     print("epoch : "+str(epoch+1),file=screen_file)
     print(f"fps : {fps:.1f} img / s",file=screen_file)
@@ -130,14 +127,14 @@ def val(model, device, config , epoch):
     get_map(MINOVERLAP, draw_plot, screen_dir,path = map_out_path)
     screen_file=open(screen_dir,mode="a",encoding="utf-8")
     print("Get map done.",file=screen_file)
-
+    '''
     print("Get coco map.",file=screen_file)
     screen_file.close()
     get_coco_map(class_names, map_out_path, screen_dir)
     screen_file=open(screen_dir,mode="a",encoding="utf-8")
     print("Get coco map done.",file=screen_file)
     screen_file.close()
-    
+    '''
 
 def get_map_txt(img,boxes,map_out_path,class_names,image_id):
     img = np.copy(img)

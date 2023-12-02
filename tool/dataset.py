@@ -310,28 +310,9 @@ class Yolo_dataset(Dataset):
             img0 = cv2.imread(img_path0)#BGR HWC
             img1 = cv2.imread(img_path1)#BGR
             
-            if np.isnan(img0).any():
-                print('before '+img_path0+'nan')
-            if not np.isfinite(img0).all():
-                print('before '+img_path0+'finite')
-            if np.isnan(img1).any():
-                print('before '+img_path1+'nan')
-            if not np.isfinite(img1).all():
-                print('before '+img_path1+'finite')
-            
             img0 = cv2.cvtColor(img0, cv2.COLOR_BGR2RGB)
             img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
             
-            if np.isnan(img0).any():
-                print(img_path0+'nan')
-            if not np.isfinite(img0).all():
-                print(img_path0+'finite')
-            if np.isnan(img1).any():
-                print(img_path1+'nan')
-            if not np.isfinite(img1).all():
-                print(img_path1+'finite')
-            
-            ##############################################################################
             #img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
             if img0 is None:
                 print(img0)
