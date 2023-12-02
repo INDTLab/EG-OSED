@@ -28,7 +28,17 @@
     ```    
 
 ### Configuration
+
+### Data Sets
+Download data sets : <a href="">GoogleLink</a> or <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
+
+The data sets were annotated in VOC formate and can be converted into the format used in this repo by `voc.py` as:  
+```copy
+python voc.py
+```
+
 #### Train
+Download ResNet50 pre-trained on the Places365 data set: <a href="https://pan.baidu.com/s/1hEaCcMFiAIlcuJdcTPiueg?pwd=e0e6 ">BaiduLink</a> or <a href="">GoogleLink</a> with code e0e6.
 You can use command like this:  
 ```copy
 python train.py -g gpu_num -subdivision sub_num -name 'proj-name' -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
@@ -44,13 +54,8 @@ Evaluates the model on the test data sets.
 python test.py -g gpu_num -name 'proj-name' -dataset 'dataset-name' -w 'weights' -backbone 'backbone-name'
 ```
   
-### Data Sets
-Download data sets : <a href="">GoogleLink</a> or <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
 
-The data sets were annotated in VOC formate and can be converted into the format used in this repo by `voc.py` as:  
-```copy
-python voc.py
-```  
+ 
 
 # Result
 Quantitative Results on the FOSD_OD, Places365_OD, SUN_OD data sets.  
