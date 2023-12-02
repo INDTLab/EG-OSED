@@ -30,7 +30,7 @@
 ### Configuration
 
 ### Data Sets
-Download data sets : <a href="">GoogleLink</a> or <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
+Download data sets : <a href="https://drive.google.com/file/d/1D00quOYefmW_VoBnJVNjkezOa2w-aUWl/view?usp=drive_link">GoogleLink</a> or <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
 
 The data sets were annotated in VOC formate and can be converted into the format used in this repo by `voc.py` as:  
 ```copy
@@ -38,7 +38,7 @@ python voc.py
 ```
 
 #### Train
-Download ResNet50 pre-trained on the Places365 data set: <a href="https://pan.baidu.com/s/1hEaCcMFiAIlcuJdcTPiueg?pwd=e0e6 ">BaiduLink</a> or <a href="">GoogleLink</a> with code e0e6.
+Download ResNet50 pre-trained on the Places365 data set: <a href="https://drive.google.com/file/d/1Zp251rEyZ-UkuuJ7r206_RyPfIlr9sGa/view?usp=drive_link">GoogleLink</a> or <a href="https://pan.baidu.com/s/1hEaCcMFiAIlcuJdcTPiueg?pwd=e0e6 ">BaiduLink</a>  with code e0e6.
 You can use command like this:  
 ```copy
 python train.py -g gpu_num -subdivision sub_num -name 'proj-name' -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
