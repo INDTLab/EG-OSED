@@ -35,6 +35,6 @@ Then you can get labels file with the formate used in this repo by voc.py as:
 `python voc.py`  
 
 # Result
-![result](imgs/results.jpg)
+![result](imgs/results.JPG)
 
 # Citation
