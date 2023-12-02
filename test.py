@@ -176,7 +176,6 @@ def get_args():
     parser.add_argument('-dataset', type=str, default='FOSD_OD', help='dataset', dest='dataset')
     parser.add_argument('-w','--weight', type=str, default='', help='Yolov4_epoch300.pth')
     parser.add_argument('-backbone',type=str, default='', help='backbone')
-    parser.add_argument('-classes', type=int, default=34, help='dataset classes')
     parser.add_argument('--width', type=int, default='608',help='image width')
     parser.add_argument('--height', type=int, default='608',help='image height')
     args =parser.parse_args()
@@ -196,6 +195,13 @@ if __name__ == "__main__":
     cfg = get_args()
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.gpu
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    if cfg.dataset == 'FOSD_OD':
+        cfg.classes = 34
+    elif cfg.dataset == 'Places365_OD':
+        cfg.classes = 40
+    elif cfg.dataset == 'SUN_OD':
+        cfg.classes = 6
 
     MINOVERLAP      = 0.5    #map iou
     
