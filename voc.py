@@ -10,14 +10,7 @@ PROJECT_PATH=os.path.dirname(os.path.abspath(__file__))
 def parse_voc_annotation(
     data_path, file_type, anno_path,use_difficult_bbox=False
 ):
-    """
-    phase pascal voc annotation, eg:[image_global_path xmin,ymin,xmax,ymax,cls_id]
-    :param data_path: eg: VOC\VOCtrainval-2007\VOCdevkit\VOC2007
-    :param file_type: eg: 'trainval''train''val'
-    :param anno_path: path to ann file
-    :param use_difficult_bbox: whither use different sample
-    :return: batch size of data set
-    """
+
     
     '''
     #fosd_classes:
@@ -90,7 +83,7 @@ if __name__ == "__main__":
     train_data_path = os.path.join(
         PROJECT_PATH, "places365_OD"
     )
-    val_data_path = os.path.join(
+    test_data_path = os.path.join(
         PROJECT_PATH, "places365_OD"
     )
 
@@ -98,9 +91,9 @@ if __name__ == "__main__":
     train_annotation_path = os.path.join(PROJECT_PATH,"data/places365_OD", "train.txt")
     if os.path.exists(train_annotation_path):
         os.remove(train_annotation_path)   
-    val_annotation_path = os.path.join(PROJECT_PATH,"data/places365_OD", "val.txt")
-    if os.path.exists(val_annotation_path):
-        os.remove(val_annotation_path)
+    test_annotation_path = os.path.join(PROJECT_PATH,"data/places365_OD", "test.txt")
+    if os.path.exists(test_annotation_path):
+        os.remove(test_annotation_path)
 
     len_train = parse_voc_annotation(
         train_data_path,
@@ -109,15 +102,15 @@ if __name__ == "__main__":
         use_difficult_bbox=False,
     )
 
-    len_val = parse_voc_annotation(
-        val_data_path,
-        "val",
-        val_annotation_path,
+    len_test = parse_voc_annotation(
+        test_data_path,
+        "test",
+        test_annotation_path,
         use_difficult_bbox=False,
     )
 
     print(
-        "The number of images for train and test are :train : {0} |  val : {1}".format(
-            len_train, len_val
+        "The number of images for train and test are :train : {0} |  test : {1}".format(
+            len_train, len_test
         )
      )

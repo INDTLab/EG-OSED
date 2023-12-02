@@ -29,12 +29,12 @@ from tensorboardX import SummaryWriter
 from easydict import EasyDict as edict
 
 
-from dataset import Yolo_dataset
+from tool.dataset import Yolo_dataset
 from cfg import Cfg
-from models import Yolov4
+from models.models import Yolov4
 
 from tool.tv_reference.utils import collate_fn as val_collate
-from val_train import val
+from tool..val_train import val
 
 
 def bboxes_iou(bboxes_a, bboxes_b, xyxy=True, GIoU=False, DIoU=False, CIoU=False):
@@ -297,7 +297,7 @@ def collate(batch):
 
 
 def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=10, img_scale=0.5):
-    train_dataset = Yolo_dataset(config.train_label,config.dataset_dir, config.dataset_dir1, config, train=True)
+    train_dataset = Yolo_dataset(config.train_label,config.dataset_dir, config.edge_dir, config, train=True)
 
     n_train = len(train_dataset)
 
@@ -324,7 +324,6 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
         Dataset classes: {config.classes}
         Train label path:{config.train_label}
         Pretrained:      {config.pretrained}
-        train_type:      {config.train_type}
         train_steps:     {config.steps[0],config.steps[1]}
     ''')#
 
@@ -365,10 +364,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
     saved_models = deque()
     global_step = 0
     model.train()
-    #if os.path.exists(config.screen_dir):
-        #os.remove(config.screen_dir)
     for epoch in range(0,epochs):
-        # model.train()
 
         with tqdm(total=n_train, desc=f'Epoch {epoch + 1}/{epochs}', unit='img', ncols=60) as pbar:
             for i, batch in enumerate(train_loader):
@@ -376,11 +372,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                 images = batch[0]
                 bboxes = batch[1]
                 
-                
-                #print(images.shape)
-                #print(images.shape)
                 images,edges = torch.split(images, [3,1], dim=1)
-                #images = torch.chunk(images,2,1)
                 '''
                 temp_path='temp_batch'
                 if not os.path.exists(temp_path):
@@ -400,20 +392,14 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                 #print(images1.shape)
                 '''
                 
-                #images=torch.cat([images,edges],dim=0)
-                #print(images.shape)
                 images=images.type(torch.cuda.FloatTensor)
                 images = images.to(device=device)
                 edges=edges.type(torch.cuda.FloatTensor)
                 edges = edges.to(device=device)
-                #images0 = images0.to(device=device, dtype=torch.float32)
-                #images1 = images1.to(device=device, dtype=torch.float32)
                 bboxes = bboxes.to(device=device)
 
-                #bboxes_pred = model(images)
                 bboxes_pred, edge_pred  = model(images)
                 loss, loss_xy, loss_wh, loss_obj, loss_cls, loss_l2 = criterion(bboxes_pred, bboxes)
-                #print(edge_pred.shape, edges.shape)
                 loss_edge = dice_loss(edge_pred, edges)
                 loss=loss+loss_edge
                 # loss = loss / config.subdivisions
@@ -445,7 +431,6 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
                 
             if save_cp:
                 try:
-                    # os.mkdir(config.checkpoints)
                     os.makedirs(config.checkpoints, exist_ok=True)
                     logging.info('Created checkpoint directory')
                 except OSError:
@@ -474,10 +459,7 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
             
             if (epoch+1)>=150 and (epoch+1)%50 == 0 or (epoch+1)>=250 and (epoch+1)%10 == 0:# or epoch==0:    
                 
-                if config.use_darknet_cfg:
-                    eval_model = Darknet(config.cfgfile, inference=True)
-                else:
-                    eval_model = Yolov4(config.pretrained,backbone=config.backbone, n_classes=config.classes, inference=True)
+                eval_model = Yolov4(config.pretrained,backbone=config.backbone, n_classes=config.classes, inference=True)
             
                 if torch.cuda.device_count() > 1:
                     #checkpoint={k:v for k,v in model.module.state_dict().items() if 'total' not in k}
@@ -501,20 +483,12 @@ def get_args(**kwargs):
     parser = argparse.ArgumentParser(description='Train the Model on images and target masks',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-sub', '--subdivisions', type=int, default=8,help='subdivisions', dest='subdivisions')
-    parser.add_argument('-train_type',  type=str, default='',help='description of this training ', dest='train_type')
+    parser.add_argument('-name',  type=str, default='',help='project name ', dest='name')
     parser.add_argument('-dataset',  type=str, default='FOSD_OD',help='dataset', dest='dataset')
     parser.add_argument('-g', '--gpu', metavar='G', type=str, default='-1',help='GPU', dest='gpu')
-    parser.add_argument('-dir0', '--data-dir0', type=str, default='FOSD_OD/JPEGImages',help='dataset dir', dest='dataset_dir')
-    parser.add_argument('-dir1', '--data-dir1', type=str, default='FOSD_OD/EdgeMap-canny',help='edgemap dir', dest='dataset_dir1')
     parser.add_argument('-backbone', type=str, default='resnet50', help='darknet\xception\resnet')
     parser.add_argument('-pretrained', type=str, default='weights/resnet50_places365.pt',help='pretrained yolov4.conv.137')
     parser.add_argument('-classes', type=int, default=34, help='dataset classes')
-    parser.add_argument('-train_label_path', dest='train_label',type=str, default='data/FOSD_OD/train.txt', help="train label path")
-    parser.add_argument('-val_path', dest='val_path', type=str, default='FOSD_OD/ImageSets/val.txt', help="val  path")
-    parser.add_argument('-checkpoints', dest='checkpoints', type=str, default='', help="weights  saved path ") 
-    parser.add_argument('-m', dest='map_out_path', type=str, default='', help="map_out_path")
-    parser.add_argument('-s', dest='save_dir', type=str, default='', help="result_save_dir")
-    parser.add_argument('-screen', dest='screen_dir', type=str, default='', help="screen_print _save_dir")
     parser.add_argument(
         '-iou-type', type=str, default='ciou',
         help='iou type (iou, giou, diou, ciou)',
@@ -581,6 +555,13 @@ if __name__ == "__main__":
         cfg.steps=[14550,16369]
     elif cfg.dataset == 'SUN_OD':
         cfg.steps=[2895,3257]
+
+    cfg.dataset_dir = os.path.join(cfg.dataset,'JPEGImages')
+    cfg.edge_dir = os.path.join(cfg.dataset,'EdgeMap-canny')
+    cfg.train_label = os.path.join('data',cfg.dataset,'train.txt')   
+    cfg.val_path = os.path.join(cfg.dataset,'ImageSets/test.txt')
+    cfg.checkpoints = os.path.join(cfg.name,'checkpoints')
+    
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.gpu
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logging.info(f'Using device {device}')
