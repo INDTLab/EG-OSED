@@ -45,7 +45,7 @@ python test.py -g gpu_num -name 'proj-name' -dataset 'dataset-name' -w 'weights'
 ```
   
 ### Data Sets
-Download data sets : <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
+Download data sets : <a href="">GoogleLink</a> or <a href="https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a">BaiduLink</a> with code `bl3a`      
 
 The data sets were annotated in VOC formate and can be converted into the format used in this repo by `voc.py` as:  
 ```copy
@@ -53,6 +53,9 @@ python voc.py
 ```  
 
 # Result
-![result](imgs/results.JPG)
+Quantitative Results on the FOSD_OD, Places365_OD, SUN_OD data sets.  
+![result](imgs/Table.png)  
+Qualitative Results derived using EG-OSED-YOLOv4 on the FOSD_OD, Places365_OD, SUN_OD data sets.  
+![result](imgs/results.JPG)  
 
 # Citation
