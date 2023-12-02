@@ -13,7 +13,7 @@
 ![archioverall](imgs/EG-OSED-YOLOv4.JPG)
 
 # Usage
-## Installation
+### Installation
 1. Create the environment from the `environment.yml` file:   
    ```copy
    conda env create -f environment.yml
@@ -27,8 +27,8 @@
    conda env list
     ```    
 
-## Configuration
-### Train
+### Configuration
+#### Train
 You can use command like this:  
 ```copy
 python train.py -g gpu_num -subdivision sub_num -name 'proj-name' -dataset 'dataset-name' -backbone 'backbone-name' -pretrained 'pretrained-weight'
@@ -38,16 +38,16 @@ You can also change parameters in the train.py and then :
 python train.py
 ```
 
-### Test
-Evaluates the model on the test data set.
+#### Test
+Evaluates the model on the test data sets.
 ```copy
 python test.py -g gpu_num -name 'proj-name' -dataset 'dataset-name' -w 'weights' -backbone 'backbone-name'
 ```
   
-# Data Sets
+### Data Sets
 Download data sets : https://pan.baidu.com/s/1jmkR3__ONSWmivjZj46nHw?pwd=bl3a 提取码：bl3a    
 
-Then you can get labels file with the formate used in this repo by voc.py as:  
+The data sets were annotated in VOC formate and can be converted into the format used in this repo by `voc.py` as:  
 ```copy
 python voc.py
 ```  
