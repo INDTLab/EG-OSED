@@ -201,7 +201,7 @@ if __name__ == "__main__":
     elif cfg.dataset == 'SUN_OD':
         cfg.classes = 6
 
-    cfg.name = os.path.join('runs/train',cfg.name)
+    cfg.name = os.path.join('runs/test',cfg.name)
 
     MINOVERLAP      = 0.5    #map iou
     
