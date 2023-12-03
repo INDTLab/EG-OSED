@@ -448,9 +448,9 @@ class EGM_each_ms_scaleadd_uplarge_darknet(nn.Module):
         return out
 
 # test 12-8 lambda FOSD_OD
-class EGM_each_ms_scaleadd_uplarge_12_8(nn.Module):
+class EGM_each_ms_scaleadd_uplarge_F(nn.Module):
     def __init__(self,scale=[1.2,1.1,1.0,0.9,0.8]):
-        super(EGM_each_ms_scaleadd_uplarge_12_8, self).__init__()
+        super(EGM_each_ms_scaleadd_uplarge_F, self).__init__()
         self.scale = scale
         oc=[64,256,512,1024,2048]
         nc=[64,64,128,256,512]
@@ -502,9 +502,9 @@ class EGM_each_ms_scaleadd_uplarge_12_8(nn.Module):
         return out
 
     # test 12-8 lambda Places365_OD SUN_OD
-class EGM_each_ms_scaleadd_uplarge_12_8(nn.Module):
+class EGM_each_ms_scaleadd_uplarge_PS(nn.Module):
     def __init__(self,scale=[1.2,1.1,1.0,0.9,0.8]):
-        super(EGM_each_ms_scaleadd_uplarge_12_8, self).__init__()
+        super(EGM_each_ms_scaleadd_uplarge_PS, self).__init__()
         self.scale = scale
         oc=[64,256,512,1024,2048]
         nc=[64,64,128,256,512]
