@@ -446,3 +446,111 @@ class EGM_each_ms_scaleadd_uplarge_darknet(nn.Module):
         
         out = self.edge(x1)
         return out
+
+# test 12-8 lambda FOSD_OD
+class EGM_each_ms_scaleadd_uplarge_12_8(nn.Module):
+    def __init__(self,scale=[1.2,1.1,1.0,0.9,0.8]):
+        super(EGM_each_ms_scaleadd_uplarge_12_8, self).__init__()
+        self.scale = scale
+        oc=[64,256,512,1024,2048]
+        nc=[64,64,128,256,512]
+        #self.reduce1 = nn.Conv2d(64, 16, 1)
+        self.reduce2 = nn.Conv2d(oc[1], nc[1], 1)
+        self.reduce3 = nn.Conv2d(oc[2], nc[2], 1)
+        self.reduce4 = nn.Conv2d(oc[3], nc[3], 1)
+        self.reduce5 = nn.Conv2d(oc[4], nc[4], 1)
+        
+        self.getf1 = ReceptiveConv(nc[0], nc[0], [1,2,4,8])
+        self.getf2 = ReceptiveConv(nc[1], nc[1], [1,2,4,8])
+        self.getf3 = ReceptiveConv(nc[2], nc[2], [1,2,4,8])
+        self.getf4 = ReceptiveConv(nc[3], nc[3], [1,2,3,4])
+        self.getf5 = ReceptiveConv(nc[4], nc[4], [1,2,3,4])
+        
+        self.reduce51 = nn.Conv2d(nc[4], nc[1], 1)
+        self.reduce41 = nn.Conv2d(nc[3], nc[1], 1)
+        self.reduce31 = nn.Conv2d(nc[2], nc[1], 1)
+        #self.reduce21 = nn.Conv2d(nc[1], nc[1], 1)
+        
+        
+        self.conv = ConvBNR(nc[1],nc[1], 3)
+        self.edge = nn.Conv2d(nc[1], 1, 1)
+        
+    def forward(self,x5,x4,x3,x2,x1):
+        size = x1.size()[2:]
+        
+        x5_fea = self.getf5(self.reduce5(x5))
+        x5 = self.reduce51(x5_fea)
+        x5 = F.interpolate(x5, size, mode='bilinear', align_corners=False)
+        
+        x4_fea = self.getf4(self.reduce4(x4)) 
+        x4 = self.reduce41(x4_fea)      
+        x4 = F.interpolate(x4, size, mode='bilinear', align_corners=False)
+        
+        x3_fea = self.getf3(self.reduce3(x3))     
+        x3 = self.reduce31(x3_fea)   
+        x3 = F.interpolate(x3, size, mode='bilinear', align_corners=False)
+        
+        x2_fea = self.getf2(self.reduce2(x2))
+        #x2_fea = self.reduce21(x2_fea)
+        x2 = F.interpolate(x2_fea, size, mode='bilinear', align_corners=False)
+        
+        x1_fea = self.getf1(x1)
+        x1 = self.conv(self.scale[0]*x1_fea+self.scale[1]*x2+self.scale[2]*x3+self.scale[3]*x4+self.scale[4]*x5)
+        
+        out = self.edge(x1)
+        
+        return out
+
+    # test 12-8 lambda Places365_OD SUN_OD
+class EGM_each_ms_scaleadd_uplarge_12_8(nn.Module):
+    def __init__(self,scale=[1.2,1.1,1.0,0.9,0.8]):
+        super(EGM_each_ms_scaleadd_uplarge_12_8, self).__init__()
+        self.scale = scale
+        oc=[64,256,512,1024,2048]
+        nc=[64,64,128,256,512]
+        #self.reduce1 = nn.Conv2d(64, 16, 1)
+        self.reduce2 = nn.Conv2d(oc[1], nc[1], 1)
+        self.reduce3 = nn.Conv2d(oc[2], nc[2], 1)
+        self.reduce4 = nn.Conv2d(oc[3], nc[3], 1)
+        self.reduce5 = nn.Conv2d(oc[4], nc[4], 1)
+        
+        self.scpc1 = ReceptiveConv(nc[0], nc[0], [1,2,4,8])
+        self.scpc2 = ReceptiveConv(nc[1], nc[1], [1,2,4,8])
+        self.scpc3 = ReceptiveConv(nc[2], nc[2], [1,2,4,8])
+        self.scpc4 = ReceptiveConv(nc[3], nc[3], [1,2,3,4])
+        self.scpc5 = ReceptiveConv(nc[4], nc[4], [1,2,3,4])
+        
+        self.reduce51 = nn.Conv2d(nc[4], nc[1], 1)
+        self.reduce41 = nn.Conv2d(nc[3], nc[1], 1)
+        self.reduce31 = nn.Conv2d(nc[2], nc[1], 1)
+        self.reduce21 = nn.Conv2d(nc[1], nc[1], 1)
+        
+        
+        self.conv = ConvBNR(nc[1],nc[1], 3)
+        self.edge = nn.Conv2d(nc[1], 1, 1)
+        
+    def forward(self,x5,x4,x3,x2,x1):
+        size = x1.size()[2:]
+        
+        x5_fea = self.scpc5(self.reduce5(x5))
+        x5 = self.reduce51(x5_fea)
+        x5 = F.interpolate(x5, size, mode='bilinear', align_corners=False)
+        
+        x4_fea = self.scpc4(self.reduce4(x4)) 
+        x4 = self.reduce41(x4_fea)      
+        x4 = F.interpolate(x4, size, mode='bilinear', align_corners=False)
+        
+        x3_fea = self.scpc3(self.reduce3(x3))     
+        x3 = self.reduce31(x3_fea)   
+        x3 = F.interpolate(x3, size, mode='bilinear', align_corners=False)
+        
+        x2_fea = self.scpc2(self.reduce2(x2))
+        x2_fea = self.reduce21(x2_fea)
+        x2 = F.interpolate(x2_fea, size, mode='bilinear', align_corners=False)
+        
+        x1_fea = self.scpc1(x1)
+        x1 = self.conv(self.scale[0]*x1_fea+self.scale[1]*x2+self.scale[2]*x3+self.scale[3]*x4+self.scale[4]*x5)
+        
+        out = self.edge(x1)
+        
+        return out
