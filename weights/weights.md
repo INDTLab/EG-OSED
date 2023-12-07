@@ -1,1 +1,1 @@
-Download weights:<a href="https://pan.baidu.com/s/1pbDzIRHppJlVzXoqspNB4w?pwd=keze">BaiduLink</a> with code `keze` or <a href="https://drive.google.com/file/d/1YCEIvquBG44w44tzoDAxpvnQpgddF1CV/view?usp=drive_link">GoogleLink</a>
+Download weights trained on the three data sets:<a href="https://pan.baidu.com/s/1p-tpsey9Ed4iJu6J9LHAIw?pwd=vkgz ">BaiduLink</a> with code `vkgz` or <a href="https://drive.google.com/file/d/185YE6WUfPXeQOEby6u8giO5h97xtx72h/view?usp=drive_link">GoogleLink</a>
