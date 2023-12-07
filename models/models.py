@@ -631,7 +631,7 @@ class Yolov4(nn.Module):
             
                 
             #print(pretrained_dict)
-            #主要针对resnet-imagenet
+            #for resnet-imagenet
             if 'imagenet' in backbone:
                 model_dict = _model.state_dict()
                 temp_dict = _model.state_dict()
@@ -645,7 +645,7 @@ class Yolov4(nn.Module):
               model_dict = _model.state_dict()
               # 1. filter out unnecessary keys
               #
-              #pytorch0.4及以后版本
+              # for pytorch0.4+
               #for (k, v), k1 in zip(pretrained_dict.items(), model_dict):
                 #print(k,v.shape,model_dict[k1].shape)
               pretrained_dict = {k1: v for (k, v), k1 in zip(pretrained_dict.items(), model_dict)}
