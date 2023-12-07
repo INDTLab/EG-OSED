@@ -61,6 +61,6 @@ python test.py -g gpu_num -name 'proj-name' -dataset 'dataset-name' -w 'weights'
 Quantitative Results on the FOSD_OD, Places365_OD, SUN_OD data sets.  
 <div align=center><img src="imgs/Table.PNG" width=50%></div>  
 Qualitative Results derived using EG-OSED-YOLOv4 on the FOSD_OD, Places365_OD, SUN_OD data sets.   
-<div align=center><img src="imgs/results.JPG"></div>  
+<div align=center><img src="imgs/visualize.PNG"></div>  
 
 # Citation
