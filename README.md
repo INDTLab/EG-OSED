@@ -10,7 +10,7 @@
 
 # Architecture
 
-![archioverall](imgs/EG-OSED-YOLOv4.JPG)
+![archioverall](imgs/EG-OSED-YOLOv4.PNG)
 
 # Usage
 ### Installation
