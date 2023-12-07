@@ -96,6 +96,70 @@ class Conv1x1(nn.Module):
 
         return x
 
+
+# cascade_add
+class EGM_each_scpc_scaleadd(nn.Module):
+    def __init__(self,scale=None):
+        super(EGM_each_scpc_scaleadd, self).__init__()
+        if scale == None:
+            scale = nn.Parameter(torch.ones(5))
+        self.scale = scale
+        
+        #self.reduce1 = nn.Conv2d(64, 16, 1)
+        self.reduce2 = nn.Conv2d(256, 64, 1)
+        self.reduce3 = nn.Conv2d(512, 128, 1)
+        self.reduce4 = nn.Conv2d(1024, 256, 1)
+        self.reduce5 = nn.Conv2d(2048, 512, 1)
+        
+        self.scpc1 = ReceptiveConv(64, 64, [1,2,4,8])
+        self.scpc2 = ReceptiveConv(64, 64, [1,2,4,8])
+        self.scpc3 = ReceptiveConv(128, 128, [1,2,4,8])
+        self.scpc4 = ReceptiveConv(256, 256, [1,2,3,4])
+        self.scpc5 = ReceptiveConv(512, 512, [1,2,3,4])
+        
+        self.reduce54 = nn.Conv2d(512, 256, 1)
+        self.reduce43 = nn.Conv2d(256, 128, 1)
+        self.reduce32 = nn.Conv2d(128, 64, 1)
+        self.conv12 = nn.Conv2d(64, 64, 1)
+        
+        
+        self.conv = ConvBNR(64, 64, 3)
+        self.edge = nn.Conv2d(64, 1, 1)
+        
+    def forward(self,x5,x4,x3,x2,x1):
+        size1=x1.size()[2:]
+        size2=x2.size()[2:]
+        size3=x3.size()[2:]
+        size4=x4.size()[2:]
+        
+        x5 = self.reduce54(self.scpc5(self.reduce5(x5)))
+        x5 = F.interpolate(x5, size4, mode='bilinear', align_corners=False)
+        
+        x4 = self.scpc4(self.reduce4(x4))
+        x4 = self.reduce43(x4+self.scale[4]*x5)
+        
+        x4 = F.interpolate(x4, size3, mode='bilinear', align_corners=False)
+        
+        x3 = self.scpc3(self.reduce3(x3))
+        x3 = self.reduce32(x3+self.scale[3]*x4)
+        
+        x3 = F.interpolate(x3, size2, mode='bilinear', align_corners=False)
+        
+        x2 = self.scpc2(self.reduce2(x2))
+        x2 = self.conv12(x2+self.scale[2]*x3)
+        
+        x2 = F.interpolate(x2, size1, mode='bilinear', align_corners=False)
+        
+        #x1 = self.scpc1(self.reduce1(x1))
+        x1 = self.scpc1(x1)
+        x1 = self.conv(self.scale[0]*x1+self.scale[1]*x2)
+        
+        out = self.edge(x1)
+        
+        return out
+
+
+
 # direct_add
 class EGM_each_ms_scaleadd_uplarge(nn.Module):
     def __init__(self,ms='scpc',scale=None,backbone='resnet50'):
@@ -268,129 +332,7 @@ class EGM_each_ms_cat_uplarge(nn.Module):
         out = self.edge(x1)
         
         return out
-        
-    
-# cascade_add
-class EGM_each_scpc_scaleadd(nn.Module):
-    def __init__(self,scale=None):
-        super(EGM_each_scpc_scaleadd, self).__init__()
-        if scale == None:
-            scale = nn.Parameter(torch.ones(5))
-        self.scale = scale
-        
-        #self.reduce1 = nn.Conv2d(64, 16, 1)
-        self.reduce2 = nn.Conv2d(256, 64, 1)
-        self.reduce3 = nn.Conv2d(512, 128, 1)
-        self.reduce4 = nn.Conv2d(1024, 256, 1)
-        self.reduce5 = nn.Conv2d(2048, 512, 1)
-        
-        self.scpc1 = ReceptiveConv(64, 64, [1,2,4,8])
-        self.scpc2 = ReceptiveConv(64, 64, [1,2,4,8])
-        self.scpc3 = ReceptiveConv(128, 128, [1,2,4,8])
-        self.scpc4 = ReceptiveConv(256, 256, [1,2,3,4])
-        self.scpc5 = ReceptiveConv(512, 512, [1,2,3,4])
-        
-        self.reduce54 = nn.Conv2d(512, 256, 1)
-        self.reduce43 = nn.Conv2d(256, 128, 1)
-        self.reduce32 = nn.Conv2d(128, 64, 1)
-        self.conv12 = nn.Conv2d(64, 64, 1)
-        
-        
-        self.conv = ConvBNR(64, 64, 3)
-        self.edge = nn.Conv2d(64, 1, 1)
-        
-    def forward(self,x5,x4,x3,x2,x1):
-        size1=x1.size()[2:]
-        size2=x2.size()[2:]
-        size3=x3.size()[2:]
-        size4=x4.size()[2:]
-        
-        x5 = self.reduce54(self.scpc5(self.reduce5(x5)))
-        x5 = F.interpolate(x5, size4, mode='bilinear', align_corners=False)
-        
-        x4 = self.scpc4(self.reduce4(x4))
-        x4 = self.reduce43(x4+self.scale[4]*x5)
-        
-        x4 = F.interpolate(x4, size3, mode='bilinear', align_corners=False)
-        
-        x3 = self.scpc3(self.reduce3(x3))
-        x3 = self.reduce32(x3+self.scale[3]*x4)
-        
-        x3 = F.interpolate(x3, size2, mode='bilinear', align_corners=False)
-        
-        x2 = self.scpc2(self.reduce2(x2))
-        x2 = self.conv12(x2+self.scale[2]*x3)
-        
-        x2 = F.interpolate(x2, size1, mode='bilinear', align_corners=False)
-        
-        #x1 = self.scpc1(self.reduce1(x1))
-        x1 = self.scpc1(x1)
-        x1 = self.conv(self.scale[0]*x1+self.scale[1]*x2)
-        
-        out = self.edge(x1)
-        
-        return out
 
-
-# cascade_add     
-class EGM_each_scpc_add(nn.Module):
-    def __init__(self):
-        super(EGM_each_scpc_add, self).__init__()
-        #self.reduce1 = nn.Conv2d(64, 16, 1)
-        self.reduce2 = nn.Conv2d(256, 64, 1)
-        self.reduce3 = nn.Conv2d(512, 64, 1)
-        self.reduce4 = nn.Conv2d(1024, 256, 1)
-        self.reduce5 = nn.Conv2d(2048, 256, 1)
-        
-        self.reduce42 = nn.Conv2d(256, 64, 1)
-        
-        self.scpc1 = ReceptiveConv(64, 64, [1,2,4,8])
-        self.scpc2 = ReceptiveConv(64, 64, [1,2,4,8])
-        self.scpc3 = ReceptiveConv(64, 64, [1,2,4,8])
-        self.scpc4 = ReceptiveConv(256, 256, [1,2,3,4])
-        self.scpc5 = ReceptiveConv(256, 256, [1,2,3,4])
-        
-        self.conv12 = nn.Conv2d(64, 64, 3, 1, 1)
-        self.conv23 = nn.Conv2d(64, 64, 3, 1, 1)
-        self.conv34 = nn.Conv2d(64, 64, 3, 1, 1)
-        self.conv45 = nn.Conv2d(256, 256, 3, 1, 1)
-        
-        #self.conv = ConvBNR(64, 64, 3)
-        self.edge = nn.Conv2d(64, 1, 1)
-        
-    def forward(self,x5,x4,x3,x2,x1):
-        size1=x1.size()[2:]
-        size2=x2.size()[2:]
-        size3=x3.size()[2:]
-        size4=x4.size()[2:]
-        
-        x5 = self.scpc5(self.reduce5(x5))
-        x5 = F.interpolate(x5, size4, mode='bilinear', align_corners=False)
-        
-        x4 = self.scpc4(self.reduce4(x4))
-        x4 = self.reduce42(self.conv45(x4+x5))
-        
-        x4 = F.interpolate(x4, size3, mode='bilinear', align_corners=False)
-        
-        x3 = self.scpc3(self.reduce3(x3))
-        x3 = self.conv34(x3+x4)
-        
-        x3 = F.interpolate(x3, size2, mode='bilinear', align_corners=False)
-        
-        x2 = self.scpc2(self.reduce2(x2))
-        x2 = self.conv23(x2+x3)
-        
-        x2 = F.interpolate(x2, size1, mode='bilinear', align_corners=False)
-        
-        #x1 = self.scpc1(self.reduce1(x1))
-        x1 = self.scpc1(x1)
-        x1 = self.conv12(x1+x2)
-        
-        #out_feature = self.conv(x1)
-        #out = self.edge(out_feature)
-        out = self.edge(x1)
-        
-        return out
     
 class EGM_each_ms_scaleadd_uplarge_darknet(nn.Module):
     def __init__(self,scale=None):
