@@ -1,8 +1,8 @@
 <p align="center"> <a href="" ><img src="imgs/title.JPG"></a></p>
 <p align="center"> 
-<a href="" ><img src="https://img.shields.io/badge/HOME-KBS-blue.svg"></a>
+<a href="https://authors.elsevier.com/c/1iJ-b3OAb99AYH" ><img src="https://img.shields.io/badge/HOME-KBS-blue.svg"></a>
 <a href="https://indtlab.github.io/projects/EG-OSED" ><img src="https://img.shields.io/badge/HOME-Paper-important.svg"></a>
-<a href="" ><img src="https://img.shields.io/badge/PDF-Paper-blueviolet.svg"></a>
+<a href="https://github.com/INDTLab/EG-OSED/blob/main/Edge-Guided_Oceanic_Scene_Element_Detection.pdf" ><img src="https://img.shields.io/badge/PDF-Paper-blueviolet.svg"></a>
 <!-- <a href="" ><img src="https://img.shields.io/badge/-Poster-ff69b7.svg"></a> -->
 <!-- <a href="" ><img src="https://img.shields.io/badge/-Video-brightgreen.svg"></a> -->
 <a href="https://drive.google.com/file/d/185YE6WUfPXeQOEby6u8giO5h97xtx72h/view?usp=drive_link" ><img src="https://img.shields.io/badge/-WeightsFiles-blue.svg"></a>
@@ -63,4 +63,19 @@ Quantitative Results on the FOSD_OD, Places365_OD, SUN_OD data sets.
 Qualitative Results derived using EG-OSED-YOLOv4 on the FOSD_OD, Places365_OD, SUN_OD data sets.   
 <div align=center><img src="imgs/yolo4.PNG"></div>  
 
+#### Reference
+* https://github.com/Tianxiaomo/pytorch-YOLOv4
+* https://github.com/bubbliiiing/yolov4-pytorch
+* https://github.com/yuhuan-wu/EDN
+
 # Citation
+```copy
+@article{xiang2023edge,
+  title={Edge-guided oceanic scene element detection},
+  author={Xiang, Keke and Dong, Xingshuai and Wang, Weibo and Dong, Xinghui},
+  journal={Knowledge-Based Systems},
+  pages={111322},
+  year={2023},
+  publisher={Elsevier}
+}
+```
